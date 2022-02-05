@@ -1,0 +1,49 @@
+spring:
+  application:
+    name: zuul-gateway-server
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+
+server:
+  servlet:
+    context-path: /api/v1
+  port: 8001
+
+zuul:
+  routes:
+    auth-service:
+      path: /auth/**
+      service-id: auth-service
+#    order-service:
+#      path: /orders/**
+#      service-id: order-service
+#    report-service:
+#      path: /reports/**
+#      service-id: report-service
+#    admin-service:
+#      path: /admin/**
+#      service-id: admin-service
+  sensitive-headers: null
+
+ribbon:
+  ReadTimeout: 60000
+  connection-timeout: 3000
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    lease-expiration-duration-in-seconds: 1
+  client:
+    fetch-registry: true
+    register-with-eureka: false
+    registry-fetch-interval-seconds: 10
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+jwt:
+  token:
+    public-key: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDYBaGO4rsvb6GK8HwqlS3dlgcPQLrNPbvjlG4mo5fPAgciAWi8YhJP22Cmd4Ec2u+yCeALgqUAvMvajnLjLtaD3cySWpb+PdNH7NoZYpJTXmsShpY4BlWpYm2Tn1c2Xd+RTojIZSYvfBAzcp6KGMDMm6FEao5bitIAmmzkY1WnzwIDAQAB
