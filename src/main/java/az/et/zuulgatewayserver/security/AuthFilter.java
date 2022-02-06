@@ -1,7 +1,5 @@
 package az.et.zuulgatewayserver.security;
 
-import az.et.zuulgatewayserver.constant.ErrorEnum;
-import az.et.zuulgatewayserver.exception.BaseException;
 import az.et.zuulgatewayserver.model.UserEntity;
 import az.et.zuulgatewayserver.repository.UserRepository;
 import az.et.zuulgatewayserver.repository.UserTokensRepository;
@@ -42,40 +40,40 @@ public class AuthFilter extends ZuulFilter {
     }
 
     @Override
-    public Object run()  {
+    public Object run() {
         final RequestContext currentContext = RequestContext.getCurrentContext();
         final String jwt = parseJwt(currentContext.getRequest());
-        System.out.println(jwt);
+        System.out.println("JWT is -> " + jwt);
         try {
             if (jwt != null && jwtTokenUtil.validateToken(jwt)) {
-                userRepository.findByUsername(jwtTokenUtil.getUsernameFromToken(jwt))
-                        .ifPresent(userFromJwt -> {
-                            System.out.println(userFromJwt);
-                            if (checkAccessTokenIsExist(jwt, userFromJwt)) {
-                                String xUser = null;
-                                try {
-                                    xUser = objectMapper.writeValueAsString(
-                                            CustomJwtUserDetailsFactory.of(
-                                                    userFromJwt.getId(),
-                                                    userFromJwt.getUsername(),
-                                                    userFromJwt.getPassword(),
-                                                    userFromJwt.getRoles()
-                                            )
-                                    );
-                                } catch (JsonProcessingException e) {
-                                    e.printStackTrace();
-                                }
-                                System.out.println(xUser);
-                                currentContext.addZuulRequestHeader(
-                                        X_USER,
-                                        xUser
-                                );
-                            }
-                        });
+                String usernameFromToken = jwtTokenUtil.getUsernameFromToken(jwt);
+                System.out.println(usernameFromToken);
+                userRepository.findByUsername(usernameFromToken).ifPresent(userEntity -> {
+                    System.out.println(userEntity);
+                    if (checkAccessTokenIsExist(jwt, userEntity)) {
+                        String xUser = null;
+                        try {
+                            xUser = objectMapper.writeValueAsString(
+                                    JwtUserDetails.of(
+                                            userEntity.getId(),
+                                            userEntity.getUsername(),
+                                            userEntity.getPassword(),
+                                            userEntity.getRoles()
+                                    )
+                            );
+                            System.out.println("User Detals -> " + xUser);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
+                        currentContext.addZuulRequestHeader(
+                                X_USER,
+                                xUser
+                        );
+                    }
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
-            throw BaseException.of(ErrorEnum.AUTH_ERROR);
         }
         return null;
     }
@@ -83,9 +81,7 @@ public class AuthFilter extends ZuulFilter {
     private String parseJwt(HttpServletRequest request) {
         final String authHeader = request.getHeader(AUTHORIZATION);
         System.out.println(authHeader);
-        if (StringUtils.hasText(authHeader) && authHeader.startsWith(BEARER)) {
-            return authHeader.substring(7);
-        }
+        if (StringUtils.hasText(authHeader) && authHeader.startsWith(BEARER)) return authHeader.substring(7);
         return null;
     }
 
@@ -100,4 +96,5 @@ public class AuthFilter extends ZuulFilter {
                 user
         );
     }
+
 }
