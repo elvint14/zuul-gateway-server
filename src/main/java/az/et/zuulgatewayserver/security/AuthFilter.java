@@ -65,6 +65,7 @@ public class AuthFilter extends ZuulFilter {
                                 } catch (JsonProcessingException e) {
                                     e.printStackTrace();
                                 }
+                                System.out.println(xUser);
                                 currentContext.addZuulRequestHeader(
                                         X_USER,
                                         xUser

@@ -24,7 +24,9 @@ server:
 
 zuul:
   host:
-    socket-timeout-millis: 30000
+    connect-timeout-millis: 60000
+    socket-timeout-millis: 60000
+  ignoredServices: "*"
   routes:
     auth-service:
       path: /auth/**
@@ -40,10 +42,6 @@ zuul:
 #    admin-service:
 #      path: /admin/**
 #      service-id: admin-service
-
-ribbon:
-  ReadTimeout: 60000
-  connection-timeout: 60000
 
 eureka:
   instance:
