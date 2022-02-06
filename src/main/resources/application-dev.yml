@@ -19,7 +19,7 @@ spring:
 
 server:
   servlet:
-    context-path: /api/v1
+    context-path: /
   port: 8001
 
 zuul:
