@@ -7,30 +7,43 @@ spring:
     username: postgres
     password: postgres
 
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      org.hibernate.envers.audit_table_suffix: _log
+
 server:
   servlet:
     context-path: /api/v1
   port: 8001
 
 zuul:
+  host:
+    socket-timeout-millis: 30000
   routes:
     auth-service:
       path: /auth/**
       service-id: auth-service
+      sensitive-headers: Cookie,Set-Cookie
 #    order-service:
 #      path: /orders/**
 #      service-id: order-service
+#      sensitive-headers: Cookie,Set-Cookie
 #    report-service:
 #      path: /reports/**
 #      service-id: report-service
 #    admin-service:
 #      path: /admin/**
 #      service-id: admin-service
-  sensitive-headers: null
 
 ribbon:
   ReadTimeout: 60000
-  connection-timeout: 3000
+  connection-timeout: 60000
 
 eureka:
   instance:
