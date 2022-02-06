@@ -68,6 +68,7 @@ public class JwtUserDetails implements UserDetails, Serializable {
     }
 
     public JwtUserDetails() {
+        super();
     }
 
     public JwtUserDetails(Long id, String username, String password, Collection<? extends GrantedAuthority> authorities) {

@@ -1,5 +1,6 @@
 package az.et.zuulgatewayserver.security;
 
+import az.et.zuulgatewayserver.dto.request.JwtUserDetailsDto;
 import az.et.zuulgatewayserver.model.UserEntity;
 import az.et.zuulgatewayserver.repository.UserRepository;
 import az.et.zuulgatewayserver.repository.UserTokensRepository;
@@ -53,13 +54,14 @@ public class AuthFilter extends ZuulFilter {
                     if (checkAccessTokenIsExist(jwt, userEntity)) {
                         String xUser = null;
                         try {
+                            final JwtUserDetailsDto jwtUserDetails = JwtUserDetailsDto.of(
+                                    userEntity.getId(),
+                                    userEntity.getUsername(),
+                                    userEntity.getPassword(),
+                                    userEntity.getRoles()
+                            );
                             xUser = objectMapper.writeValueAsString(
-                                    JwtUserDetails.of(
-                                            userEntity.getId(),
-                                            userEntity.getUsername(),
-                                            userEntity.getPassword(),
-                                            userEntity.getRoles()
-                                    )
+                                    jwtUserDetails
                             );
                             System.out.println("User Detals -> " + xUser);
                         } catch (JsonProcessingException e) {
