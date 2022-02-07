@@ -31,7 +31,7 @@ zuul:
   routes:
     auth-service:
       path: /auth/**
-      service-id: auth-service
+      service-id: auth_service
       sensitive-headers: Cookie,Set-Cookie
 #     order-service:
 #       path: /orders/**
