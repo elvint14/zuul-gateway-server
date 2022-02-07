@@ -3,15 +3,15 @@ spring:
     name: zuul-gateway-server
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://postgres:5432/postgres
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-    
+
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -33,10 +33,10 @@ zuul:
       path: /auth/**
       service-id: auth-service
       sensitive-headers: Cookie,Set-Cookie
-   order-service:
-     path: /orders/**
-     service-id: order-service
-     sensitive-headers: Cookie,Set-Cookie
+    order-service:
+      path: /orders/**
+      service-id: order-service
+      sensitive-headers: Cookie,Set-Cookie
 #    report-service:
 #      path: /reports/**
 #      service-id: report-service
@@ -53,7 +53,7 @@ eureka:
     register-with-eureka: false
     registry-fetch-interval-seconds: 10
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka-server:8761/eureka/
 
 
 jwt:
