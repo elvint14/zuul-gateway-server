@@ -33,10 +33,10 @@ zuul:
       path: /auth/**
       service-id: auth-service
       sensitive-headers: Cookie,Set-Cookie
-    order-service:
-      path: /orders/**
-      service-id: order-service
-      sensitive-headers: Cookie,Set-Cookie
+#     order-service:
+#       path: /orders/**
+#       service-id: order-service
+#       sensitive-headers: Cookie,Set-Cookie
 #    report-service:
 #      path: /reports/**
 #      service-id: report-service
